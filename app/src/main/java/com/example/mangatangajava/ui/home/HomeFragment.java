@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
 
         slider = (Slider)root.findViewById(R.id.slider);
         Slider.init(new PicassoLoadingService());
+
         swipeRefreshLayout = (SwipeRefreshLayout)root.findViewById(R.id.swipe_to_refresh);
 
 
