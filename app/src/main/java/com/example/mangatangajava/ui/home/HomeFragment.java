@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -43,7 +44,8 @@ import ss.com.bannerslider.Slider;
 
 public class HomeFragment extends Fragment implements IBanners, IComics {
 
-    private HomeViewModel homeViewModel;
+    private HomeViewModelJava homeViewModel;
+    private MySliderAdapter mySliderAdapter;
     Slider slider;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recycler_comic;
@@ -52,10 +54,10 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
 
     //database
 
-    DatabaseReference banners,comics;
+    DatabaseReference comics;
 
     //Listener
-    IBanners bannerListener;
+    //IBanners bannerListener;
     IComics comicListener;
     android.app.AlertDialog alertDialog;
 
@@ -64,16 +66,25 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
+                ViewModelProviders.of(this).get(HomeViewModelJava.class);
+        homeViewModel.init(this);
+
+
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         //Init Database
-
+/*
         banners = FirebaseDatabase.getInstance().getReference("Banners");
+        banners.keepSynced(true);
+
+ */
         comics = FirebaseDatabase.getInstance().getReference("Comic");
+        comics.keepSynced(true);
+
+
 
         //Init Listener
-               bannerListener = this;
+               //bannerListener = this;
                comicListener = this;
 
         slider = (Slider)root.findViewById(R.id.slider);
@@ -87,7 +98,7 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
         recycler_comic.setLayoutManager(new GridLayoutManager( requireContext(),2));
 
         txt_comic = (TextView)root.findViewById(R.id.txt_comic);
-
+/*
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -104,16 +115,9 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
             }
         });
 
+ */
 
 
-
-       // final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                //textView.setText(s);
-            }
-        });
         return root;
     }
 
@@ -146,8 +150,8 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
             }
         });
     }
-
-    private void loadBanner() {
+/*
+    public void loadBanner() {
 banners.addListenerForSingleValueEvent(new ValueEventListener() {
     @Override
     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -174,6 +178,8 @@ banners.addListenerForSingleValueEvent(new ValueEventListener() {
 
     }
 
+ */
+
     @Override
     public void onComicLoadDoneList(List<Manga> comicList) {
         Common.comicList = comicList;
@@ -187,5 +193,17 @@ banners.addListenerForSingleValueEvent(new ValueEventListener() {
             alertDialog.dismiss();
 
 
+    }
+
+    @Override
+    public void onBannerLoadDoneList(List<String> banners) {
+        homeViewModel.getBAnner().observe(this, new Observer<ArrayList<String>>() {
+            @Override
+            public void onChanged(ArrayList<String> strings) {
+
+
+
+            }
+        });
     }
 }
