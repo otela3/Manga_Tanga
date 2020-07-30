@@ -43,9 +43,8 @@ import dmax.dialog.SpotsDialog;
 import ss.com.bannerslider.Slider;
 
 public class HomeFragment extends Fragment implements IBanners, IComics {
-
-    private HomeViewModelJava homeViewModel;
     private MySliderAdapter mySliderAdapter;
+    private HomeViewModelJava homeViewModel;
     Slider slider;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recycler_comic;
@@ -65,9 +64,13 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+
+
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModelJava.class);
         homeViewModel.init(this);
+
 
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -87,6 +90,7 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
                //bannerListener = this;
                comicListener = this;
 
+       // mySliderAdapter = new MySliderAdapter(homeViewModel.getBanner().getValue());
         slider = (Slider)root.findViewById(R.id.slider);
         Slider.init(new PicassoLoadingService());
 
@@ -98,24 +102,38 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
         recycler_comic.setLayoutManager(new GridLayoutManager( requireContext(),2));
 
         txt_comic = (TextView)root.findViewById(R.id.txt_comic);
+
+        homeViewModel =
+                ViewModelProviders.of(this).get(HomeViewModelJava.class);
+        homeViewModel.init(this);
+       mySliderAdapter = new MySliderAdapter(homeViewModel.getBanner().getValue());
+
 /*
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadBanner();
-                loadComic();
+               // homeViewModel.getBanner();
+                //onBannerLoadDoneList();
+                //loadData();
+                //loadComic();
             }
         });
+
+
 
         swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-              loadBanner();
-              loadComic();
+                //homeViewModel.getBanner();
+                //loadData();
+
+              //loadComic();
             }
         });
 
  */
+
+
 
 
         return root;
@@ -128,7 +146,6 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
                 .setCancelable(false)
                 .setMessage("porfavor espere...")
                 .build();
-        if(!swipeRefreshLayout.isRefreshing())
         alertDialog.show();
         comics.addListenerForSingleValueEvent(new ValueEventListener() {
             List<Manga> manga_load = new ArrayList<>();
@@ -189,21 +206,29 @@ banners.addListenerForSingleValueEvent(new ValueEventListener() {
         txt_comic.setText(new StringBuilder("NEW COMIC (")
                 .append(comicList.size())
                 .append(")"));
-        if(!swipeRefreshLayout.isRefreshing())
             alertDialog.dismiss();
 
 
     }
 
     @Override
-    public void onBannerLoadDoneList(List<String> banners) {
-        homeViewModel.getBAnner().observe(this, new Observer<ArrayList<String>>() {
-            @Override
-            public void onChanged(ArrayList<String> strings) {
+    public void onBannerLoadDoneList (List < String > banners) {
 
-
-
-            }
-        });
+        loadData();
     }
+
+public void loadData(){
+    homeViewModel.getBanner().observe(getViewLifecycleOwner(), new Observer<ArrayList<String>>() {
+        @Override
+        public void onChanged(ArrayList<String> strings) {
+           slider.setAdapter(new MySliderAdapter(strings));
+        }
+    });
+
+
+        }
+
+
 }
+
+

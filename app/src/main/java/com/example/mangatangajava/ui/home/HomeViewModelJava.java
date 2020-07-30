@@ -22,7 +22,7 @@ public class HomeViewModelJava extends ViewModel {
         }
         banner = Repo.getInstance(ibanez).getBanner();
     }
-    public LiveData<ArrayList<String>> getBAnner(){
+    public LiveData<ArrayList<String>> getBanner(){
         return banner;
     }
 }

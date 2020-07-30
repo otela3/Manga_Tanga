@@ -5,10 +5,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mangatangajava.Interface.IBanners;
 import com.example.mangatangajava.adapter.MySliderAdapter;
 import com.example.mangatangajava.model.Manga;
+import com.example.mangatangajava.service.PicassoLoadingService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +27,7 @@ public class Repo implements IBanners {
 
     static Repo instance;
    private ArrayList<String> bannerModel = new ArrayList<>();
-
+    SwipeRefreshLayout swipeRefreshLayout;
     DatabaseReference banners,comics;
    static IBanners bannerListener;
     Slider slider;
@@ -39,6 +41,7 @@ public class Repo implements IBanners {
        return instance;
    }
    public MutableLiveData<ArrayList<String>> getBanner(){
+
        loadBanner();
 
        MutableLiveData<ArrayList<String>> banner = new MutableLiveData<>();
@@ -47,9 +50,12 @@ public class Repo implements IBanners {
        return banner;
    }
 
+
+
     private void loadBanner() {
         banners = FirebaseDatabase.getInstance().getReference("Banners");
         banners.keepSynced(true);
+       // Slider.init(new PicassoLoadingService());
         banners.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
