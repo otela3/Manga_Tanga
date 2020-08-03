@@ -8,7 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.mangatangajava.Interface.IBanners;
+import com.example.mangatangajava.Interface.IComics;
+import com.example.mangatangajava.adapter.MyComicAdapter;
 import com.example.mangatangajava.adapter.MySliderAdapter;
+import com.example.mangatangajava.common.Common;
 import com.example.mangatangajava.model.Manga;
 import com.example.mangatangajava.service.PicassoLoadingService;
 import com.google.firebase.database.DataSnapshot;
@@ -21,14 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import ss.com.bannerslider.Slider;
 
 public class Repo implements IBanners {
 
     static Repo instance;
    private ArrayList<String> bannerModel = new ArrayList<>();
-    SwipeRefreshLayout swipeRefreshLayout;
-    DatabaseReference banners,comics;
+    DatabaseReference banners;
    static IBanners bannerListener;
     Slider slider;
 
@@ -50,12 +53,9 @@ public class Repo implements IBanners {
        return banner;
    }
 
-
-
     private void loadBanner() {
         banners = FirebaseDatabase.getInstance().getReference("Banners");
         banners.keepSynced(true);
-       // Slider.init(new PicassoLoadingService());
         banners.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -78,10 +78,12 @@ public class Repo implements IBanners {
             });
     }
 
+
     @Override
     public void onBannerLoadDoneList(List<String> banners) {
         slider.setAdapter(new MySliderAdapter(banners));
 
     }
+
 
 }

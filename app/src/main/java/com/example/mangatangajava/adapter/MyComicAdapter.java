@@ -1,6 +1,7 @@
 package com.example.mangatangajava.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mangatangajava.Interface.IRecyclerItemClickListener;
 import com.example.mangatangajava.R;
+import com.example.mangatangajava.common.Common;
 import com.example.mangatangajava.model.Manga;
+import com.example.mangatangajava.ui.chapter.ChapterActivity;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyComicAdapter extends RecyclerView.Adapter<MyComicAdapter.MyViewHolder> {
@@ -29,6 +34,8 @@ public class MyComicAdapter extends RecyclerView.Adapter<MyComicAdapter.MyViewHo
 
     }
 
+
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -42,6 +49,14 @@ public class MyComicAdapter extends RecyclerView.Adapter<MyComicAdapter.MyViewHo
         Picasso.get().load(comicList.get(position).Image).into(holder.comic_image);
         holder.comic_name.setText(comicList.get(position).Name);
 
+        holder.setRecyclerItemClickListener(new IRecyclerItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+               context.startActivity(new Intent(context,ChapterActivity.class));
+                Common.comicSelected = comicList.get(position);
+            }
+        });
+
     }
 
     @Override
@@ -49,13 +64,26 @@ public class MyComicAdapter extends RecyclerView.Adapter<MyComicAdapter.MyViewHo
         return comicList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView comic_name;
         ImageView comic_image;
+        IRecyclerItemClickListener recyclerItemClickListener;
+
+        public void setRecyclerItemClickListener(IRecyclerItemClickListener recyclerItemClickListener) {
+            this.recyclerItemClickListener = recyclerItemClickListener;
+        }
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             comic_image = (ImageView)itemView.findViewById(R.id.image_comic);
             comic_name = (TextView)itemView.findViewById(R.id.comic_name);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            recyclerItemClickListener.onClick(view, getAdapterPosition());
         }
     }
 }

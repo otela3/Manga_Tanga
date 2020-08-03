@@ -44,58 +44,35 @@ import ss.com.bannerslider.Slider;
 
 public class HomeFragment extends Fragment implements IBanners, IComics {
     private MySliderAdapter mySliderAdapter;
-    private HomeViewModelJava homeViewModel;
+    private MyComicAdapter myComicAdapter;
+    private HomeViewModelJava homeViewModel = new HomeViewModelJava();
     Slider slider;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recycler_comic;
     TextView txt_comic;
+    IComics comics;
+    Context context;
 
 
-    //database
-
-    DatabaseReference comics;
-
-    //Listener
-    //IBanners bannerListener;
-    IComics comicListener;
-    android.app.AlertDialog alertDialog;
-
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
 
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModelJava.class);
         homeViewModel.init(this);
 
-
-
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //Init Database
-/*
-        banners = FirebaseDatabase.getInstance().getReference("Banners");
-        banners.keepSynced(true);
-
- */
-        comics = FirebaseDatabase.getInstance().getReference("Comic");
-        comics.keepSynced(true);
-
-
-
-        //Init Listener
-               //bannerListener = this;
-               comicListener = this;
-
-       // mySliderAdapter = new MySliderAdapter(homeViewModel.getBanner().getValue());
         slider = (Slider)root.findViewById(R.id.slider);
         Slider.init(new PicassoLoadingService());
 
         swipeRefreshLayout = (SwipeRefreshLayout)root.findViewById(R.id.swipe_to_refresh);
-
 
         recycler_comic = (RecyclerView)root.findViewById(R.id.recycler_comic);
         recycler_comic.setHasFixedSize(true);
@@ -106,129 +83,48 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModelJava.class);
         homeViewModel.init(this);
-       mySliderAdapter = new MySliderAdapter(homeViewModel.getBanner().getValue());
 
-/*
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-               // homeViewModel.getBanner();
-                //onBannerLoadDoneList();
-                //loadData();
-                //loadComic();
-            }
-        });
+        comics = new HomeFragment();
 
+        homeViewModel.init2(this, context);
 
-
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                //homeViewModel.getBanner();
-                //loadData();
-
-              //loadComic();
-            }
-        });
-
- */
-
-
-
+        mySliderAdapter = new MySliderAdapter(homeViewModel.getBanner().getValue());
+        myComicAdapter = new MyComicAdapter(context,homeViewModel.getManga().getValue());
 
         return root;
     }
 
-    private void loadComic() {
-
-        //show Dialog
-         alertDialog = new SpotsDialog.Builder().setContext(getContext())
-                .setCancelable(false)
-                .setMessage("porfavor espere...")
-                .build();
-        alertDialog.show();
-        comics.addListenerForSingleValueEvent(new ValueEventListener() {
-            List<Manga> manga_load = new ArrayList<>();
+    @Override
+    public void onComicLoadDoneList(final List<Manga> comicList) {
+       // homeViewModel.init2(this, context);
+        homeViewModel.getManga().observe(getViewLifecycleOwner(), new Observer<ArrayList<Manga>>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onChanged(ArrayList<Manga> mangas) {
 
-                for(DataSnapshot comicSnapShot:dataSnapshot.getChildren()){
-                    Manga manga = comicSnapShot.getValue(Manga.class);
-                    manga_load.add(manga);
-                }
+                Common.comicList = comicList;
 
-                comicListener.onComicLoadDoneList(manga_load);
+                recycler_comic.setAdapter(new MyComicAdapter(getContext(),comicList));
+
+                txt_comic.setText(new StringBuilder("NEW COMIC (")
+                        .append(comicList.size())
+                        .append(")"));
 
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
         });
-    }
-/*
-    public void loadBanner() {
-banners.addListenerForSingleValueEvent(new ValueEventListener() {
-    @Override
-    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        List<String> bannerList = new ArrayList<>();
-        for(DataSnapshot bannerSnapShot: dataSnapshot.getChildren()){
-            String image = bannerSnapShot.getValue(String.class);
-            bannerList.add(image);
-        }
-        //Call listener
-        bannerListener.onBannerLoadDoneList(bannerList);
-
-    }
-
-    @Override
-    public void onCancelled(@NonNull DatabaseError databaseError) {
-        Toast.makeText(getContext(), ""+databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-    }
-});
-    }
-
-    @Override
-    public void onBannerLoadDoneList(List<String> banners) {
-        slider.setAdapter(new MySliderAdapter(banners));
-
-    }
-
- */
-
-    @Override
-    public void onComicLoadDoneList(List<Manga> comicList) {
-        Common.comicList = comicList;
-
-        recycler_comic.setAdapter(new MyComicAdapter(getContext(),comicList));
-
-        txt_comic.setText(new StringBuilder("NEW COMIC (")
-                .append(comicList.size())
-                .append(")"));
-            alertDialog.dismiss();
-
 
     }
 
     @Override
     public void onBannerLoadDoneList (List < String > banners) {
 
-        loadData();
-    }
-
-public void loadData(){
-    homeViewModel.getBanner().observe(getViewLifecycleOwner(), new Observer<ArrayList<String>>() {
-        @Override
-        public void onChanged(ArrayList<String> strings) {
-           slider.setAdapter(new MySliderAdapter(strings));
-        }
-    });
-
-
-        }
-
-
+        homeViewModel.getBanner().observe(getViewLifecycleOwner(), new Observer<ArrayList<String>>() {
+            @Override
+            public void onChanged(ArrayList<String> strings) {
+                slider.setAdapter(new MySliderAdapter(strings));
+            }
+        });
+     }
 }
 
 

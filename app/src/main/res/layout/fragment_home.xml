@@ -27,13 +27,7 @@
                 android:id="@+id/btn_show_filter_search"
                 android:src="@drawable/ic__search_white_24"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"/>
-
-            <ImageView
-                android:src="@drawable/comicapp"
-                android:layout_width="0dp"
-                android:layout_weight="8"
+                android:layout_weight="17"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
@@ -58,7 +52,7 @@
             <TextView
                 android:id="@+id/txt_comic"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/horizontal_line"
                 android:padding="8dp"
                 android:text="NEW comic   "
@@ -67,11 +61,12 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_comic"
-            android:padding="8dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="8dp">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>

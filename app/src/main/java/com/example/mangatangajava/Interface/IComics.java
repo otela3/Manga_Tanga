@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IComics {
     void onComicLoadDoneList(List<Manga> comicList);
+    //void onChapterDoneLoad(List<Manga> chapterList);
 }
