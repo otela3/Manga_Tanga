@@ -8,7 +8,7 @@ public class Manga {
     public String Image;
     public String Category;
     public List<Chapter> Chapter = new ArrayList<>();
-
+//filtro por categoria en construccion
 
     public Manga() {
     }

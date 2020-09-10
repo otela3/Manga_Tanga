@@ -29,3 +29,4 @@ public class GalleryFragment extends Fragment {
         return root;
     }
 }
+//en construccion :P

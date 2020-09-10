@@ -14,23 +14,6 @@
         android:layout_height="match_parent">
 
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:padding="16dp"
-            android:weightSum="9"
-            android:background="@color/columnColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-
-                android:id="@+id/btn_show_filter_search"
-                android:src="@drawable/ic__search_white_24"
-                android:layout_width="0dp"
-                android:layout_weight="17"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
 
         <ss.com.bannerslider.Slider
             android:id="@+id/slider"

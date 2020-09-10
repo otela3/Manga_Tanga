@@ -43,6 +43,7 @@ public class Repo implements IBanners {
        bannerListener =  ibanez;
        return instance;
    }
+   //almacenado
    public MutableLiveData<ArrayList<String>> getBanner(){
 
        loadBanner();
@@ -52,7 +53,7 @@ public class Repo implements IBanners {
 
        return banner;
    }
-
+//lectura del slider
     private void loadBanner() {
         banners = FirebaseDatabase.getInstance().getReference("Banners");
         banners.keepSynced(true);

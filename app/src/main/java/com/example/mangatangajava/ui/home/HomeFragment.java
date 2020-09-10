@@ -1,18 +1,18 @@
 package com.example.mangatangajava.ui.home;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LifecycleOwner;
+
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -30,11 +30,7 @@ import com.example.mangatangajava.common.Common;
 import com.example.mangatangajava.model.Manga;
 import com.example.mangatangajava.service.PicassoLoadingService;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,9 +76,7 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
 
         txt_comic = (TextView)root.findViewById(R.id.txt_comic);
 
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModelJava.class);
-        homeViewModel.init(this);
+
 
         comics = new HomeFragment();
 
@@ -93,10 +87,10 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
 
         return root;
     }
-
+//observer lista comic
     @Override
     public void onComicLoadDoneList(final List<Manga> comicList) {
-       // homeViewModel.init2(this, context);
+
         homeViewModel.getManga().observe(getViewLifecycleOwner(), new Observer<ArrayList<Manga>>() {
             @Override
             public void onChanged(ArrayList<Manga> mangas) {
@@ -114,7 +108,7 @@ public class HomeFragment extends Fragment implements IBanners, IComics {
         });
 
     }
-
+//observer banner slider
     @Override
     public void onBannerLoadDoneList (List < String > banners) {
 

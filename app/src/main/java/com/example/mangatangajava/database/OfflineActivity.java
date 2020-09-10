@@ -11,6 +11,7 @@ public class OfflineActivity extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        //activacion de persistencia de datos offline
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 }
